@@ -28,15 +28,16 @@
  * along with Enterprise.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "comm.h"
-template < 	typename index_t,
-			typename vertex_t,
-			typename depth_t> 
-index_t validate(	depth_t *depth_h, 
-					index_t *beg_pos,
-					vertex_t *csr,
-					index_t	num_ver)
-{
-	
+
+template<typename index_t,
+	typename vertex_t,
+	typename depth_t>
+index_t validate(
+	depth_t *depth_h,
+	index_t *beg_pos,
+	vertex_t *csr,
+	index_t num_ver) {
+
 	//divide the adjacency vertices of this vertex into two parts
 	//-parent part: all the vertices connected to the parent part 
 	//				should have smaller or equal to base_depth
@@ -44,56 +45,45 @@ index_t validate(	depth_t *depth_h,
 	//				should have larger or equal to base_depth
 
 	//depth difference should be no more than 1
-	
-	depth_t 	base_depth;
-	vertex_t 	base_v;
-	index_t		test = 0;
-	depth_t 	conn_depth;
-	vertex_t	conn_v;
-	
+
+	depth_t base_depth;
+	vertex_t base_v;
+	index_t test = 0;
+	depth_t conn_depth;
+	vertex_t conn_v;
+
 	srand(time(NULL));
-	while(test < VALIDATE_TIMES)
-	{
-		base_v = rand()%num_ver;
-		while(depth_h[base_v] == INFTY)
-			base_v	= rand()%num_ver;
-		
-		test ++;
-		base_depth	= depth_h[base_v];
-		
-		for(index_t i = beg_pos[base_v]; i< beg_pos[base_v+1]; i++)
-		{
-			conn_v		= csr[i];
-			conn_depth 	= depth_h[conn_v];
-			if(conn_depth > base_depth + 1 ||
-				conn_depth < base_depth  -1)
+	while (test < VALIDATE_TIMES) {
+		base_v = rand() % num_ver;
+		while (depth_h[base_v] == INFTY)
+			base_v = rand() % num_ver;
+
+		test++;
+		base_depth = depth_h[base_v];
+
+		for (index_t i = beg_pos[base_v]; i < beg_pos[base_v + 1]; i++) {
+			conn_v = csr[i];
+			conn_depth = depth_h[conn_v];
+			if (conn_depth > base_depth + 1 || conn_depth < base_depth - 1)
 				return -1;
-			
-			if(conn_depth < base_depth)
-			{
-				for(index_t j = beg_pos[conn_v];j < beg_pos[conn_v+1]; j++)
-				{
-					if(depth_h[csr[j]]	> base_depth)
+
+			if (conn_depth < base_depth) {
+				for (index_t j = beg_pos[conn_v]; j < beg_pos[conn_v + 1]; j++) {
+					if (depth_h[csr[j]] > base_depth)
 						return -2;
 				}
 			}
 
-			if(conn_depth > base_depth)
-			{
-				for(index_t j = beg_pos[conn_v];j < beg_pos[conn_v+1]; j++)
-				{
-					if(depth_h[csr[j]]
-							< base_depth)
+			if (conn_depth > base_depth) {
+				for (index_t j = beg_pos[conn_v]; j < beg_pos[conn_v + 1]; j++) {
+					if (depth_h[csr[j]] < base_depth)
 						return -3;
 				}
 			}
 
-			if(conn_depth == base_depth)
-			{
-				for(index_t j = beg_pos[conn_v];j < beg_pos[conn_v+1]; j++)
-				{
-					if(	depth_h[csr[j]]> base_depth + 1 ||
-						depth_h[csr[j]]	< base_depth -1)
+			if (conn_depth == base_depth) {
+				for (index_t j = beg_pos[conn_v]; j < beg_pos[conn_v + 1]; j++) {
+					if (depth_h[csr[j]] > base_depth + 1 || depth_h[csr[j]] < base_depth - 1)
 						return -4;
 				}
 			}
@@ -103,23 +93,21 @@ index_t validate(	depth_t *depth_h,
 }
 
 
-template< 	typename vertex_t,
-			typename index_t,
-			typename depth_t>
-void report(	index_t &agg_tr_edges,
-				index_t &agg_tr_v,
-				index_t *beg_pos,
-				depth_t	*depth_h,
-				index_t	num_ver)
-{
-	agg_tr_edges	= 0;
-	agg_tr_v		= 0;
-	for(index_t i = 0; i< num_ver; i++)
-	{
-		if(depth_h[i] != INFTY)
-		{
-			agg_tr_v ++;
-			agg_tr_edges += beg_pos[i+1]-beg_pos[i];
+template<typename vertex_t,
+	typename index_t,
+	typename depth_t>
+void report(
+	index_t &agg_tr_edges,
+	index_t &agg_tr_v,
+	index_t *beg_pos,
+	depth_t *depth_h,
+	index_t num_ver) {
+	agg_tr_edges = 0;
+	agg_tr_v = 0;
+	for (index_t i = 0; i < num_ver; i++) {
+		if (depth_h[i] != INFTY) {
+			agg_tr_v++;
+			agg_tr_edges += beg_pos[i + 1] - beg_pos[i];
 		}
 	}
 

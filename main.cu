@@ -37,51 +37,48 @@
 int main(int args, char *argv[]) {
 	typedef int vertex_t;
 	typedef int index_t;
-	
-	std::cout<<"Input format: ./exe beg_pos(binary, signed long) csr_file(binary, signed long)\n";
-	
-	if(args != 3)
-	{
-		std::cout<<"Wrong input\n";
+
+	std::cout << "Input format: ./exe beg_pos(binary, signed long) csr_file(binary, signed long)\n";
+
+	if (args != 3) {
+		std::cout << "Wrong input\n";
 		return -1;
 	}
 
-	const index_t gpu_id 	= 0;
-	graph<long, long, double, vertex_t, index_t, double> *ginst 
-	= new graph<long, long, double, vertex_t, index_t, double>
-		(argv[1],argv[2],NULL);
-	
+	const index_t gpu_id = 0;
+	graph<long, long, double, vertex_t, index_t, double> *ginst
+		= new graph<long, long, double, vertex_t, index_t, double>
+			(argv[1], argv[2], NULL);
+
 	/*Generate non-redundant non-orphan source list*/
-	vertex_t *src_list=new vertex_t[64];
-	for(long i=0;i<64;i++)
-	{
-		vertex_t src=rand()%ginst->vert_count;
+	vertex_t *src_list = new vertex_t[64];
+	for (long i = 0; i < 64; i++) {
+		vertex_t src = rand() % ginst->vert_count;
 
 		//non-orphan
-		if(ginst->beg_pos[src+1]-ginst->beg_pos[src] !=0)
-		{
-			bool isNew=true;
+		if (ginst->beg_pos[src + 1] - ginst->beg_pos[src] != 0) {
+			bool isNew = true;
 
 			//non-redundant
-			for(long j=0;j<i;j++)
-			{
-				if(src==src_list[j])
-				{
-					isNew=false;
+			for (long j = 0; j < i; j++) {
+				if (src == src_list[j]) {
+					isNew = false;
 					break;
 				}
 			}
 
-			if(isNew) src_list[i]=src;
+			if (isNew) src_list[i] = src;
 		}
 	}
 
-	bfs_gpu_coalescing_mem<vertex_t,index_t>(
-		src_list,
-		ginst->beg_pos,
-		ginst->csr,
-		ginst->vert_count,
-		ginst->edge_count,
-		gpu_id);
+	bfs_gpu_coalescing_mem<vertex_t, index_t>
+		(
+			src_list,
+			ginst->beg_pos,
+			ginst->csr,
+			ginst->vert_count,
+			ginst->edge_count,
+			gpu_id
+		);
 	return 0;
 }

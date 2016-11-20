@@ -36,6 +36,8 @@
 #define <<< H_ERE(
 #define >>> )
 
+#define DONE cout << endlx
+
 #include <stdio.h>
 
 static void HandleError(

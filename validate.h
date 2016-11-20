@@ -1,16 +1,16 @@
 /*
  * Copyright 2016 The George Washington University
- * Written by Hang Liu 
+ * Written by Hang Liu
  * Directed by Prof. Howie Huang
  *
  * https://www.seas.gwu.edu/~howie/
  * Contact: iheartgraph@gmail.com
  *
- * 
+ *
  * Please cite the following paper:
- * 
+ *
  * Hang Liu and H. Howie Huang. 2015. Enterprise: breadth-first graph traversal on GPUs. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis (SC '15). ACM, New York, NY, USA, Article 68 , 12 pages. DOI: http://dx.doi.org/10.1145/2807591.2807594
- 
+
  *
  * This file is part of Enterprise.
  *
@@ -21,7 +21,7 @@
  *
  * Enterprise is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -39,7 +39,7 @@ index_t validate(
 	index_t num_ver) {
 
 	//divide the adjacency vertices of this vertex into two parts
-	//-parent part: all the vertices connected to the parent part 
+	//-parent part: all the vertices connected to the parent part
 	//				should have smaller or equal to base_depth
 	//-children part: all vertices connected to the children part
 	//				should have larger or equal to base_depth

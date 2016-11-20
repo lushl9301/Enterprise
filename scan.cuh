@@ -1,16 +1,16 @@
 /*
  * Copyright 2016 The George Washington University
- * Written by Hang Liu 
+ * Written by Hang Liu
  * Directed by Prof. Howie Huang
  *
  * https://www.seas.gwu.edu/~howie/
  * Contact: iheartgraph@gmail.com
  *
- * 
+ *
  * Please cite the following paper:
- * 
+ *
  * Hang Liu and H. Howie Huang. 2015. Enterprise: breadth-first graph traversal on GPUs. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis (SC '15). ACM, New York, NY, USA, Article 68 , 12 pages. DOI: http://dx.doi.org/10.1145/2807591.2807594
- 
+
  *
  * This file is part of Enterprise.
  *
@@ -21,7 +21,7 @@
  *
  * Enterprise is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -426,14 +426,14 @@ __global__ void __post_scan(
 		blk_idx = blk_idx_orig + CONFLICT_FREE_OFFSET(blk_idx_orig);
 //-------------------------------------------------
 //KEEP THIS AS WELL
-//this time we substract too many CONFLICT_FREE_OFF 
+//this time we substract too many CONFLICT_FREE_OFF
 //		blk_idx	-= CONFLICT_FREE_OFFSET(blk_idx);
 //		blk_idx	+= gridDim.x;
 //		blk_idx	+= CONFLICT_FREE_OFFSET(blk_idx);
 //
 //-------------------------------------------------
 //KEEP IT HERE:
-//	if this way of counting blk_idx, we count 
+//	if this way of counting blk_idx, we count
 //the previous padding twice!!!!
 //		blk_idx	= gridDim.x;
 //		blk_idx	+= CONFLICT_FREE_OFFSET(blk_idx);
@@ -815,7 +815,7 @@ __global__ void sml_scan(
 }
 
 //-----------------------------------------
-//For inspection, 
+//For inspection,
 //exact threads number of data to scan
 //---------------------------------------
 template<typename data_t, typename index_t>

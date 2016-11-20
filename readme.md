@@ -21,7 +21,7 @@ Execute
 ------
 Type: "./enterprise.bin" it will show you what is needed.
 
-Tips: It needs a CSR formated graph (beg file and csr file). 
+Tips: It needs a CSR formated graph (beg file and csr file).
 
 You could use the code from "tuple_text_to_bin.binary_csr" folder to convert a edge list (text formated) graph into CSR files (binary), e.g., if you have a text file called "test.txt", it will convert it into "test.txt_beg_pos.bin" and "test.txt_csr.bin". You will need these two files to run enterprise.
 
@@ -30,13 +30,13 @@ Converter: edge tuples to CSR
 ----
 - Compile: make
 - To execute: type "./text_to_bin.bin", it will show you what is needed
-- Basically, you could download a tuple list file from [snap](https://snap.stanford.edu/data/). Afterwards, you could use this converter to convert the edge list into CSR format. 
+- Basically, you could download a tuple list file from [snap](https://snap.stanford.edu/data/). Afterwards, you could use this converter to convert the edge list into CSR format.
 
 **For example**:
 
-- Download https://snap.stanford.edu/data/com-Orkut.html file. **unzip** it. 
+- Download https://snap.stanford.edu/data/com-Orkut.html file. **unzip** it.
 - **./text_to_bin.bin soc-orkut.mtx 1 2(could change, depends on the number of lines are not edges)**
-- You will get *soc-orkut.mtx_beg_pos.bin* and *soc-orkut.mtx_csr.bin*. 
+- You will get *soc-orkut.mtx_beg_pos.bin* and *soc-orkut.mtx_csr.bin*.
 - You could use these two files to run enterprise.
 
 --
@@ -66,7 +66,7 @@ The overall code structure of this project is:
 
 - comm.h: common headers or preprocessors shared by all files.
 
-- gather.h: copy results from GPU to CPU. 
+- gather.h: copy results from GPU to CPU.
 
 
 **Should you have any questions about this project, please contact us by iheartgraph@gmail.com.**

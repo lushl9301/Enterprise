@@ -1,16 +1,16 @@
 /*
  * Copyright 2016 The George Washington University
- * Written by Hang Liu 
+ * Written by Hang Liu
  * Directed by Prof. Howie Huang
  *
  * https://www.seas.gwu.edu/~howie/
  * Contact: iheartgraph@gmail.com
  *
- * 
+ *
  * Please cite the following paper:
- * 
+ *
  * Hang Liu and H. Howie Huang. 2015. Enterprise: breadth-first graph traversal on GPUs. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis (SC '15). ACM, New York, NY, USA, Article 68 , 12 pages. DOI: http://dx.doi.org/10.1145/2807591.2807594
- 
+
  *
  * This file is part of Enterprise.
  *
@@ -21,7 +21,7 @@
  *
  * Enterprise is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -163,7 +163,7 @@ __global__ void THD_expand_sort
 
 	while (cache_ptr < HUB_SZ) {
 		//hub_depth should be investigated before depth_d[hub_cache[]]
-		//Reason: hub_cache[] maybe blank which leads to out-of-bound 
+		//Reason: hub_cache[] maybe blank which leads to out-of-bound
 		//			depth_d transaction
 		if ((hub_depth[cache_ptr] == LEVEL) && (depth_d[hub_cache[cache_ptr]] == INFTY))
 			depth_d[hub_cache[cache_ptr]] = LEVEL;
@@ -274,7 +274,7 @@ __global__ void WAP_expand_sort
 
 	while (cache_ptr < HUB_SZ) {
 		//hub_depth should be investigated before depth_d[hub_cache[]]
-		//Reason: hub_cache[] maybe blank which leads to out-of-bound 
+		//Reason: hub_cache[] maybe blank which leads to out-of-bound
 		//			depth_d transaction
 		if ((hub_depth[cache_ptr] == LEVEL) && (depth_d[hub_cache[cache_ptr]] == INFTY))
 			depth_d[hub_cache[cache_ptr]] = LEVEL;
@@ -381,7 +381,7 @@ __global__ void CTA_expand_sort
 
 	while (cache_ptr < HUB_SZ) {
 		//hub_depth should be investigated before depth_d[hub_cache[]]
-		//Reason: hub_cache[] maybe blank which leads to out-of-bound 
+		//Reason: hub_cache[] maybe blank which leads to out-of-bound
 		//			depth_d transaction
 		if ((hub_depth[cache_ptr] == LEVEL) && (depth_d[hub_cache[cache_ptr]] == INFTY))
 			depth_d[hub_cache[cache_ptr]] = LEVEL;
@@ -559,7 +559,7 @@ __global__ void WAP_bu_expand_sort
 		card_curr += strt_pos_curr;
 		card_curr_revised += strt_pos_curr;
 
-		//cardinality of all vertices in wap_queue 
+		//cardinality of all vertices in wap_queue
 		//is larger than 32
 		aq_ver_curr = adj_list_d[lane];
 
@@ -792,7 +792,7 @@ void clfy_expand_sort
 				curr_level,
 				adj_list_d
 		);
-//	std::cout<<"td THD ="<<cudaDeviceSynchronize()<<"\n";	
+//	std::cout<<"td THD ="<<cudaDeviceSynchronize()<<"\n";
 
 	CTA_expand_sort<vertex_t, index_t, depth_t>
 		<<< BLKS_NUM, THDS_NUM, 0, stream[2] >>>
@@ -801,7 +801,7 @@ void clfy_expand_sort
 				curr_level,
 				adj_list_d
 		);
-//	std::cout<<"td CTA ="<<cudaDeviceSynchronize()<<"\n";	
+//	std::cout<<"td CTA ="<<cudaDeviceSynchronize()<<"\n";
 
 	WAP_expand_sort<vertex_t, index_t, depth_t>
 		<<< BLKS_NUM, THDS_NUM, 0, stream[1] >>>
@@ -810,7 +810,7 @@ void clfy_expand_sort
 				curr_level,
 				adj_list_d
 		);
-//	std::cout<<"td WAP ="<<cudaDeviceSynchronize()<<"\n";	
+//	std::cout<<"td WAP ="<<cudaDeviceSynchronize()<<"\n";
 
 }
 
@@ -833,7 +833,7 @@ void clfy_bu_expand_sort
 				curr_level,
 				adj_list_d
 		);
-	//std::cout<<"bu THD ="<<cudaDeviceSynchronize()<<"\n";	
+	//std::cout<<"bu THD ="<<cudaDeviceSynchronize()<<"\n";
 
 	WAP_bu_expand_sort<vertex_t, index_t, depth_t><<<BLKS_NUM, THDS_NUM, 0, stream[1]>>>
 		(
@@ -841,7 +841,7 @@ void clfy_bu_expand_sort
 				curr_level,
 				adj_list_d
 		);
-	//std::cout<<"bu WAP ="<<cudaDeviceSynchronize()<<"\n";	
+	//std::cout<<"bu WAP ="<<cudaDeviceSynchronize()<<"\n";
 
 	CTA_bu_expand_sort<vertex_t, index_t, depth_t><<<BLKS_NUM, THDS_NUM, 0, stream[2]>>>
 		(
@@ -849,6 +849,5 @@ void clfy_bu_expand_sort
 				curr_level,
 				adj_list_d
 		);
-	//std::cout<<"bu CTA ="<<cudaDeviceSynchronize()<<"\n";	
+	//std::cout<<"bu CTA ="<<cudaDeviceSynchronize()<<"\n";
 }
-

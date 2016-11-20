@@ -15,7 +15,7 @@ ifeq ($(enable_check), 1)
 endif
 
 
-OBJS=  	main.o 
+OBJS=  	main.o
 DEPS= 	Makefile \
 		expander.cuh \
 		inspector.cuh \
@@ -24,7 +24,7 @@ DEPS= 	Makefile \
 		wtime.h \
 		write_result.cuh \
 		scan.cuh \
-		allocator.cuh 
+		allocator.cuh
 
 %.o:%.cu $(DEPS)
 	${CUCC} -c  ${CUFLAGS} $< -o $@

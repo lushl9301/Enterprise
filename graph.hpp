@@ -55,7 +55,7 @@ graph<file_vert_t, file_index_t, file_weight_t, new_vert_t, new_index_t, new_wei
 		fclose(file);
 		std::cout << "Possible edge count: " << tmp_beg_pos[vert_count] << "\n";
 
-		//converting to new type when different 
+		//converting to new type when different
 		if (sizeof(file_index_t) != sizeof(new_index_t)) {
 			beg_pos = new new_index_t[vert_count + 1];
 			for (new_index_t i = 0; i < vert_count + 1; ++i)
@@ -107,4 +107,3 @@ graph<file_vert_t, file_index_t, file_weight_t, new_vert_t, new_index_t, new_wei
 	std::cout << "Graph load (success): " << vert_count << " verts, " << edge_count << " edges " << wtime() - tm
 	          << " second(s)\n";
 }
-

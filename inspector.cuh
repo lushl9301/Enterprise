@@ -1,16 +1,16 @@
 /*
  * Copyright 2016 The George Washington University
- * Written by Hang Liu 
+ * Written by Hang Liu
  * Directed by Prof. Howie Huang
  *
  * https://www.seas.gwu.edu/~howie/
  * Contact: iheartgraph@gmail.com
  *
- * 
+ *
  * Please cite the following paper:
- * 
+ *
  * Hang Liu and H. Howie Huang. 2015. Enterprise: breadth-first graph traversal on GPUs. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis (SC '15). ACM, New York, NY, USA, Article 68 , 12 pages. DOI: http://dx.doi.org/10.1145/2807591.2807594
- 
+
  *
  * This file is part of Enterprise.
  *
@@ -21,7 +21,7 @@
  *
  * Enterprise is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -173,7 +173,7 @@ __global__ void sort_switch_dist_inspect_clfy
 	//Figure out its own start and end pos
 	//We want each thread to inspect a continuous block
 	index_t step_sz = NUM_VER / GRNTY;
-//	if(step_sz<16){	
+//	if(step_sz<16){
 	//small problem size
 	const index_t REMAINDER = NUM_VER - step_sz * GRNTY;
 	if (TID_ST < REMAINDER) {
@@ -233,7 +233,7 @@ __global__ void sort_switch_dist_inspect_clfy
 //		__shared__ index_t	beg_pos_s[THDS_NUM];
 //		__shared__ depth_t	depth_s[THDS_NUM<<4];
 //		beg_pos_s[threadIdx.x] = step_sz*TID;
-//	
+//
 //		const index_t TRIES 		= step_sz>>4;
 //		const index_t lane_id		= threadIdx.x%32;
 //		const index_t	warp_id		= threadIdx.x>>5;
@@ -242,7 +242,7 @@ __global__ void sort_switch_dist_inspect_clfy
 //		index_t tries = 0;
 //		index_t	load_ptr;
 //		index_t	proc_vert;
-//		
+//
 //		while(tries < TRIES){
 //
 //			//warp stride loading
@@ -269,7 +269,7 @@ __global__ void sort_switch_dist_inspect_clfy
 //							ex_mid_ct++;
 //						}
 //					}
-//			
+//
 //			//construct hub-cache
 //			if(depth_curr == LEVEL){
 //				hub_ptr	= tid & (HUB_BU_SZ - 1);
@@ -278,14 +278,14 @@ __global__ void sort_switch_dist_inspect_clfy
 //					hub_card[hub_ptr] = card_curr;
 //				}
 //			}
-//			
+//
 //			card_curr	= card_next;
 //			depth_curr	= depth_next;
 //			tid			= tid_next;
 //			tid_next	++;
 //		}
-//	
-//	
+//
+//
 //	}
 
 #ifdef ENABLE_CHECKING

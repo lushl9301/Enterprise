@@ -47,8 +47,7 @@ int main(int args, char *argv[]) {
 
 	const index_t gpu_id = 0;
 	graph<long, long, double, vertex_t, index_t, double> *ginst
-		= new graph<long, long, double, vertex_t, index_t, double>
-			(argv[1], argv[2], NULL);
+		= new graph<long, long, double, vertex_t, index_t, double>(argv[1], argv[2], NULL);
 
 	/*Generate non-redundant non-orphan source list*/
 	vertex_t *src_list = new vertex_t[64];

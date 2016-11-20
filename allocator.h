@@ -57,7 +57,7 @@ struct allocator {
 		index_t *csr,
 		index_t vert_count,
 		index_t edge_count,
-		cudaStream_t *&stream,
+//		cudaStream_t *&stream,
 		const index_t bin_sz
 		) {
 
@@ -75,62 +75,100 @@ struct allocator {
 		//+----------------------------
 		//|ADDED FOR CLASSIFICATION
 		//+----------------------------
-		H_ERR(cudaMalloc((void **) &ex_cat_sml_d, sizeof(vertex_t) * cat_sz));
-		H_ERR(cudaMalloc((void **) &ex_cat_mid_d, sizeof(vertex_t) * cat_sz));
-		H_ERR(cudaMalloc((void **) &ex_cat_lrg_d, sizeof(vertex_t) * cat_sz));
+		DONE;
+//		H_ERR(cudaMalloc((void **) &ex_cat_sml_d, sizeof(vertex_t) * cat_sz));
+//		H_ERR(cudaMalloc((void **) &ex_cat_mid_d, sizeof(vertex_t) * cat_sz));
+//		H_ERR(cudaMalloc((void **) &ex_cat_lrg_d, sizeof(vertex_t) * cat_sz));
+		ex_cat_sml_d = (vertex_t *)malloc(sizeof(vertex_t) * cat_sz);
+		ex_cat_mid_d = (vertex_t *)malloc(sizeof(vertex_t) * cat_sz);
+		ex_cat_lrg_d = (vertex_t *)malloc(sizeof(vertex_t) * cat_sz);
 		gpu_bytes += (3 * sizeof(vertex_t) * cat_sz);
 
-		H_ERR(cudaMalloc((void **) &ex_q_sml_d, sizeof(vertex_t) * vert_count));
-		H_ERR(cudaMalloc((void **) &ex_q_mid_d, sizeof(vertex_t) * vert_count));
-		H_ERR(cudaMalloc((void **) &ex_q_lrg_d, sizeof(vertex_t) * vert_count));
+		DONE;
+//		H_ERR(cudaMalloc((void **) &ex_q_sml_d, sizeof(vertex_t) * vert_count));
+//		H_ERR(cudaMalloc((void **) &ex_q_mid_d, sizeof(vertex_t) * vert_count));
+//		H_ERR(cudaMalloc((void **) &ex_q_lrg_d, sizeof(vertex_t) * vert_count));
+		ex_q_sml_d = (vertex_t *)malloc(sizeof(vertex_t) * vert_count);
+		ex_q_mid_d = (vertex_t *)malloc(sizeof(vertex_t) * vert_count);
+		ex_q_lrg_d = (vertex_t *)malloc(sizeof(vertex_t) * vert_count);
 		gpu_bytes += (sizeof(vertex_t) * vert_count * 3);
 
-		H_ERR(cudaBindTexture(0, tex_sml_exq, ex_q_sml_d, sizeof(vertex_t) * vert_count));
-		H_ERR(cudaBindTexture(0, tex_mid_exq, ex_q_mid_d, sizeof(vertex_t) * vert_count));
-		H_ERR(cudaBindTexture(0, tex_lrg_exq, ex_q_lrg_d, sizeof(vertex_t) * vert_count));
+		DONE;
+		//TODO modify tex1Dfetch
+//		H_ERR(cudaBindTexture(0, tex_sml_exq, ex_q_sml_d, sizeof(vertex_t) * vert_count));
+//		H_ERR(cudaBindTexture(0, tex_mid_exq, ex_q_mid_d, sizeof(vertex_t) * vert_count));
+//		H_ERR(cudaBindTexture(0, tex_lrg_exq, ex_q_lrg_d, sizeof(vertex_t) * vert_count));
+		memcpy(tex_sml_exq, ex_q_sml_d, sizeof(vertex_t) * vert_count);
+		memcpy(tex_mid_exq, ex_q_mid_d, sizeof(vertex_t) * vert_count);
+		memcpy(tex_lrg_exq, ex_q_lrg_d, sizeof(vertex_t) * vert_count);
 
 		const index_t off_sz = THDS_NUM * BLKS_NUM;
-		H_ERR(cudaMalloc((void **) &ex_cat_sml_off, sizeof(index_t) * off_sz));
-		H_ERR(cudaMalloc((void **) &ex_cat_mid_off, sizeof(index_t) * off_sz));
-		H_ERR(cudaMalloc((void **) &ex_cat_lrg_off, sizeof(index_t) * off_sz));
-		H_ERR(cudaMalloc((void **) &ex_cat_sml_sz, sizeof(index_t) * off_sz));
-		H_ERR(cudaMalloc((void **) &ex_cat_mid_sz, sizeof(index_t) * off_sz));
-		H_ERR(cudaMalloc((void **) &ex_cat_lrg_sz, sizeof(index_t) * off_sz));
+
+		DONE;
+//		H_ERR(cudaMalloc((void **) &ex_cat_sml_off, sizeof(index_t) * off_sz));
+//		H_ERR(cudaMalloc((void **) &ex_cat_mid_off, sizeof(index_t) * off_sz));
+//		H_ERR(cudaMalloc((void **) &ex_cat_lrg_off, sizeof(index_t) * off_sz));
+//		H_ERR(cudaMalloc((void **) &ex_cat_sml_sz, sizeof(index_t) * off_sz));
+//		H_ERR(cudaMalloc((void **) &ex_cat_mid_sz, sizeof(index_t) * off_sz));
+//		H_ERR(cudaMalloc((void **) &ex_cat_lrg_sz, sizeof(index_t) * off_sz));
+		ex_cat_sml_off = (index_t *)malloc(sizeof(index_t) * off_sz);
+		ex_cat_mid_off = (index_t *)malloc(sizeof(index_t) * off_sz);
+		ex_cat_lrg_off = (index_t *)malloc(sizeof(index_t) * off_sz);
+		ex_cat_sml_sz = (index_t *)malloc(sizeof(index_t) * off_sz);
+		ex_cat_mid_sz = (index_t *)malloc(sizeof(index_t) * off_sz);
+		ex_cat_lrg_sz = (index_t *)malloc(sizeof(index_t) * off_sz);
 		gpu_bytes += (sizeof(vertex_t) * off_sz * 6);
 
-
-		H_ERR(cudaMalloc((void **) &depth_d, sizeof(depth_t) * vert_count));
-		H_ERR(cudaBindTexture(0, tex_depth, depth_d, sizeof(depth_t) * vert_count));
-
-		H_ERR(cudaMalloc((void **) &adj_card_d, sizeof(index_t) * vert_count));
-		H_ERR(cudaMalloc((void **) &strt_pos_d, sizeof(index_t) * vert_count));
+		DONE;
+//		H_ERR(cudaMalloc((void **) &depth_d, sizeof(depth_t) * vert_count));
+//		H_ERR(cudaBindTexture(0, tex_depth, depth_d, sizeof(depth_t) * vert_count));
+//		H_ERR(cudaMalloc((void **) &adj_card_d, sizeof(index_t) * vert_count));
+//		H_ERR(cudaMalloc((void **) &strt_pos_d, sizeof(index_t) * vert_count));
+		depth_d = (depth_t *)malloc(sizeof(depth_t) * vert_count);
+		memcpy(tex_depth, depth_d, sizeof(depth_t) * vert_count);
+		adj_card_d = (index_t *)malloc(sizeof(index_t) * vert_count);
+		strt_pos_d = (index_t *)malloc(sizeof(index_t) * vert_count);
 		gpu_bytes += (sizeof(index_t) * vert_count * 3);
 
-		H_ERR(cudaMemcpy(strt_pos_d, beg_pos, sizeof(index_t) * vert_count, cudaMemcpyHostToDevice));
+		DONE;
+//		H_ERR(cudaMemcpy(strt_pos_d, beg_pos, sizeof(index_t) * vert_count, cudaMemcpyHostToDevice));
+		memcpy(strt_pos_d, beg_pos, sizeof(index_t) * vert_count);
 
-		H_ERR(cudaBindTexture(0, tex_strt, strt_pos_d, sizeof(index_t) * vert_count));
-
+		DONE;
+		//TODO remove tex1Dfetch
+//		H_ERR(cudaBindTexture(0, tex_strt, strt_pos_d, sizeof(index_t) * vert_count));
+		memcpy(tex_strt, strt_pos_d, sizeof(index_t) * vert_count);
+		
 		EDGES_C = edge_count;
-		H_ERR(cudaMalloc((void **) &adj_list_d, sizeof(vertex_t) * edge_count));
-		H_ERR(cudaMemcpy(adj_list_d, csr, sizeof(vertex_t) * edge_count, cudaMemcpyHostToDevice));
+		DONE;
+//		H_ERR(cudaMalloc((void **) &adj_list_d, sizeof(vertex_t) * edge_count));
+//		H_ERR(cudaMemcpy(adj_list_d, csr, sizeof(vertex_t) * edge_count, cudaMemcpyHostToDevice));
+		adj_list_d = (vertex_t *)malloc(sizeof(vertex_t) * edge_count);
+		memcpy(adj_list_d, csr, sizeof(vertex_t) * edge_count);
 		gpu_bytes += (sizeof(vertex_t) * edge_count);
 
 
 		//////////////////////////
 		//std::cout<<"before\n";
-		stream = (cudaStream_t *) malloc(sizeof(cudaStream_t) * Q_CARD);
-		for (index_t i = 0; i < Q_CARD; i++)
-			cudaStreamCreate(&(stream[i]));
+//		stream = (cudaStream_t *) malloc(sizeof(cudaStream_t) * Q_CARD);
+//		for (index_t i = 0; i < Q_CARD; i++)
+//			cudaStreamCreate(&(stream[i]));
 
 		for (index_t i = 0; i < vert_count; i++)
 			temp[i] = beg_pos[i + 1] - beg_pos[i];
 
-		H_ERR(cudaMemcpy(adj_card_d, temp, sizeof(index_t) * vert_count, cudaMemcpyHostToDevice));
-		H_ERR(cudaBindTexture(0, tex_card, adj_card_d, sizeof(index_t) * vert_count));
+		DONE;
+		//TODO remove tex1Dfetch
+//		H_ERR(cudaMemcpy(adj_card_d, temp, sizeof(index_t) * vert_count, cudaMemcpyHostToDevice));
+//		H_ERR(cudaBindTexture(0, tex_card, adj_card_d, sizeof(index_t) * vert_count));
+		memcpy(adj_card_d, temp, sizeof(index_t) * vert_count);
+		memcpy(tex_card, adj_card_d, sizeof(index_t) * vert_count);
 
-		H_ERR(cudaMalloc((void **) &tr_edges_c_d, sizeof(index_t) * BLKS_NUM));
-		H_ERR(cudaMallocHost((void **) &tr_edges_c_h, sizeof(index_t) * BLKS_NUM));
-
+		DONE;
+//		H_ERR(cudaMalloc((void **) &tr_edges_c_d, sizeof(index_t) * BLKS_NUM));
+//		H_ERR(cudaMallocHost((void **) &tr_edges_c_h, sizeof(index_t) * BLKS_NUM));
+		tr_edges_c_d = (index_t *)memcpy(sizeof(index_t) * BLKS_NUM);
+		tr_edges_c_h = (index_t *)memcpy(sizeof(index_t) * BLKS_NUM);
 
 		gpu_bytes += (sizeof(index_t) * BLKS_NUM);
 		cpu_bytes += (sizeof(index_t) * BLKS_NUM);

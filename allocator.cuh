@@ -34,31 +34,32 @@
 template<typename vertex_t, typename index_t, typename depth_t>
 struct allocator {
 	inline static __host__ void alloc_array
-		(
-			depth_t *&depth_d,    //vertex level
-			vertex_t *&adj_list_d,//vertex adj ver
-			index_t *&adj_card_d,//each adj ver len
-			index_t *&strt_pos_d,//adj_list_d strt pos
-			vertex_t *&ex_q_sml_d,//+--------------------
-			vertex_t *&ex_q_mid_d,//|
-			vertex_t *&ex_q_lrg_d,//|-------------------+
-			index_t *&ex_cat_sml_sz,//|USED FOR CLASSIFIC|
-			index_t *&ex_cat_mid_sz,//|ATION OF CLASSIFYI|
-			index_t *&ex_cat_lrg_sz,//|NG THE EXPANSION Q|
-			index_t *&ex_cat_sml_off,//|UEUE-------------+
-			index_t *&ex_cat_mid_off,//|
-			index_t *&ex_cat_lrg_off,//+-----------------
-			vertex_t *&ex_cat_sml_d,//each thd obt ex_q
-			vertex_t *&ex_cat_mid_d,//each thd obt ex_q
-			vertex_t *&ex_cat_lrg_d,//each thd obt ex_q
-			index_t *&tr_edges_c_d,
-			index_t *&tr_edges_c_h,
-			index_t *beg_pos,
-			index_t *csr,
-			index_t vert_count,
-			index_t edge_count,
-			cudaStream_t *&stream,
-			const index_t bin_sz) {
+	(
+		depth_t *&depth_d,    //vertex level
+		vertex_t *&adj_list_d,//vertex adj ver
+		index_t *&adj_card_d,//each adj ver len
+		index_t *&strt_pos_d,//adj_list_d strt pos
+		vertex_t *&ex_q_sml_d,//+--------------------
+		vertex_t *&ex_q_mid_d,//|
+		vertex_t *&ex_q_lrg_d,//|-------------------+
+		index_t *&ex_cat_sml_sz,//|USED FOR CLASSIFIC|
+		index_t *&ex_cat_mid_sz,//|ATION OF CLASSIFYI|
+		index_t *&ex_cat_lrg_sz,//|NG THE EXPANSION Q|
+		index_t *&ex_cat_sml_off,//|UEUE-------------+
+		index_t *&ex_cat_mid_off,//|
+		index_t *&ex_cat_lrg_off,//+-----------------
+		vertex_t *&ex_cat_sml_d,//each thd obt ex_q
+		vertex_t *&ex_cat_mid_d,//each thd obt ex_q
+		vertex_t *&ex_cat_lrg_d,//each thd obt ex_q
+		index_t *&tr_edges_c_d,
+		index_t *&tr_edges_c_h,
+		index_t *beg_pos,
+		index_t *csr,
+		index_t vert_count,
+		index_t edge_count,
+		cudaStream_t *&stream,
+		const index_t bin_sz
+		) {
 
 		//used for 	-strt_pos_d
 		//			-adj_card_d

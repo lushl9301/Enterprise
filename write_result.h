@@ -33,8 +33,7 @@
 #include <sstream>
 
 template<typename index_t, typename vertex_t>
-int graph<index_t, vertex_t>::
-write_result() {
+int graph<index_t, vertex_t>::write_result() {
 	std::stringstream ss;
 	srand(time(NULL));
 	std::ofstream result_file;
@@ -59,7 +58,6 @@ write_result() {
 			break;
 		result_file << "\n";
 	}
-
 	result_file.close();
 
 	return 0;

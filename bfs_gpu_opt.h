@@ -29,9 +29,9 @@
  */
 #include "graph.h"
 #include "allocator.h"
-#include "scan.cuh"
-#include "expander.cuh"
-#include "inspector.cuh"
+#include "scan.h"
+#include "expander.h"
+#include "inspector.h"
 #include "wtime.h"
 #include "validate.h"
 #include <stdio.h>

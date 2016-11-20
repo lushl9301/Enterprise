@@ -29,16 +29,14 @@
  */
 #include "graph.h"
 
-template<
-	typename file_vert_t, typename file_index_t, typename file_weight_t,
-	typename new_vert_t, typename new_index_t, typename new_weight_t>
-graph<file_vert_t, file_index_t, file_weight_t,
-	new_vert_t, new_index_t, new_weight_t>
+template<typename file_vert_t, typename file_index_t, typename file_weight_t,
+	 typename new_vert_t, typename new_index_t, typename new_weight_t>
+graph<file_vert_t, file_index_t, file_weight_t, new_vert_t, new_index_t, new_weight_t>
 ::graph
-	(
-		const char *beg_file,
-		const char *csr_file,
-		const char *weight_file
+(
+	const char *beg_file,
+	const char *csr_file,
+	const char *weight_file
 	) {
 	double tm = wtime();
 	FILE *file = NULL;

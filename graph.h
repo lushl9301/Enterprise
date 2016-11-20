@@ -46,10 +46,9 @@ inline off_t fsize(const char *filename) {
 	return -1;
 }
 
-template<
-	typename file_vert_t, typename file_index_t, typename file_weight_t,
+template<typename file_vert_t, typename file_index_t, typename file_weight_t,
 	typename new_vert_t, typename new_index_t, typename new_weight_t>
-class graph {
+	class graph {
 public:
 	new_index_t *beg_pos;
 	new_vert_t *csr;
@@ -62,10 +61,12 @@ public:
 
 	~graph() {};
 
-	graph(
-		const char *beg_file,
-		const char *csr_file,
-		const char *weight_file);
+	graph
+		(
+			const char *beg_file,
+			const char *csr_file,
+			const char *weight_file
+			);
 };
 
 #include "graph.hpp"

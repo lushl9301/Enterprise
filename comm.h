@@ -1,16 +1,16 @@
 /*
  * Copyright 2016 The George Washington University
- * Written by Hang Liu 
+ * Written by Hang Liu
  * Directed by Prof. Howie Huang
  *
  * https://www.seas.gwu.edu/~howie/
  * Contact: iheartgraph@gmail.com
  *
- * 
+ *
  * Please cite the following paper:
- * 
+ *
  * Hang Liu and H. Howie Huang. 2015. Enterprise: breadth-first graph traversal on GPUs. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis (SC '15). ACM, New York, NY, USA, Article 68 , 12 pages. DOI: http://dx.doi.org/10.1145/2807591.2807594
- 
+
  *
  * This file is part of Enterprise.
  *
@@ -21,7 +21,7 @@
  *
  * Enterprise is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -40,10 +40,12 @@
 
 #include <stdio.h>
 
-static void HandleError(
+static void HandleError
+(
 	cudaError_t err,
 	const char *file,
-	int line) {
+	int line
+) {
 	if (err != cudaSuccess) {
 		printf("%s in %s at line %d\n", cudaGetErrorString(err), file, line);
 		exit(EXIT_FAILURE);
@@ -53,13 +55,13 @@ static void HandleError(
 #define H_ERR(err) (HandleError( err, __FILE__, __LINE__ ))
 
 
-#define MAX_Q_SIZE                (1024*1024)
+#define MAX_Q_SIZE              (1024*1024)
 
 //////////////////////////////////////////////////
-//SCALE*THDS_NUMS*sizeof(int) should be 
+//SCALE*THDS_NUMS*sizeof(int) should be
 //limited by the size of the shared memory
 /////////////////////////////////////////////////
-#define SCALE                        (1024*4)
+#define SCALE                      (1024*4)
 //////////////////////////////////////////////////
 #define THDS_NUM                        256
 #define BLKS_NUM                        256
@@ -82,7 +84,7 @@ typedef struct vertex {
 
 typedef struct queue {
 	volatile index_t num_ver;
-	index_t *front_queue;//only remember the vertex 
+	index_t *front_queue;//only remember the vertex
 	//id other than the whole vertex
 } queue_t;
 
@@ -112,16 +114,16 @@ enum ex_q_t {
 	NONE
 };
 //--------------------------------
-#define VIS                                0x02
-#define UNVIS                        0x00
-#define FRT                                0x01
-#define SET_VIS(a)                ((a)=0x02)
+#define VIS               0x02
+#define UNVIS             0x00
+#define FRT               0x01
+#define SET_VIS(a)  ((a)=0x02)
 
-#define SET_FRT(a)                ((a)=0x01)
+#define SET_FRT(a)  ((a)=0x01)
 
-#define IS_FRT(a)                ((a)==0x01)
-#define IS_VIS(a)                ((a)==0x02)
-#define IS_UNVIS(a)                ((a)==0x00)
+#define IS_FRT(a)   ((a)==0x01)
+#define IS_VIS(a)   ((a)==0x02)
+#define IS_UNVIS(a) ((a)==0x00)
 
 //----------------------------------
 //GLOBAL VARIABLES
@@ -159,25 +161,32 @@ index_t error_h;
 //texture <vertex_t,	1, cudaReadModeElementType> tex_adj_list[4];
 //size_t  tex_adj_off[4];
 
-texture<index_t, 1, cudaReadModeElementType> tex_card;
-texture<index_t, 1, cudaReadModeElementType> tex_strt;
-texture<depth_t, 1, cudaReadModeElementType> tex_depth;
-
-texture<vertex_t, 1, cudaReadModeElementType> tex_sml_exq;
-texture<vertex_t, 1, cudaReadModeElementType> tex_mid_exq;
-texture<vertex_t, 1, cudaReadModeElementType> tex_lrg_exq;
-
+DONE;
+// Texture (<type>, <dim>, <readmode>) <texture_reference>
+// cudaReadModeElementType:  no conversion performed
+//texture<index_t, 1, cudaReadModeElementType> tex_card;
+//texture<index_t, 1, cudaReadModeElementType> tex_strt;
+//texture<depth_t, 1, cudaReadModeElementType> tex_depth;
+index_t *tex_card;
+index_t *tex_strt;
+depth_t *tex_depth;
+//texture<vertex_t, 1, cudaReadModeElementType> tex_sml_exq;
+//texture<vertex_t, 1, cudaReadModeElementType> tex_mid_exq;
+//texture<vertex_t, 1, cudaReadModeElementType> tex_lrg_exq;
+vertex_t *tex_sml_exq;
+vertex_t *tex_mid_exq;
+vertex_t *tex_lrg_exq;
 
 __device__ index_t hub_vert[1920];
 __device__ depth_t hub_stat[1920];
 __device__ index_t hub_card[1920];
 
-#define HUB_SZ                        1536
-#define HUB_BU_SZ                1920//should be 1.25 of HUB_SZ
+#define HUB_SZ    1536
+#define HUB_BU_SZ 1920//should be 1.25 of HUB_SZ
 //since there is no status
 //array in __shared__ mem
-#define HUB_CRITERIA        0
+#define HUB_CRITERIA 0
 
-#define Q_CARD        3
+#define Q_CARD       3
 
 #endif

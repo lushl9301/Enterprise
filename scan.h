@@ -36,14 +36,15 @@
 
 //USED FOR EXPANSION
 template<typename data_t, typename index_t>
-__global__ void __pre_scan(
-	data_t *scan_ind_d,
-	data_t *adj_card_d,
-	data_t *scan_out_d,
-	data_t *blk_sum,
-	index_t num_dat,
-	const index_t THD_NUM
-) {
+__global__ void __pre_scan
+	(
+		data_t *scan_ind_d,
+		data_t *adj_card_d,
+		data_t *scan_out_d,
+		data_t *blk_sum,
+		index_t num_dat,
+		const index_t THD_NUM
+		) {
 	const data_t tile_sz = THD_NUM << 1;
 	const index_t lane = threadIdx.x << 1;
 	index_t tid = threadIdx.x + blockIdx.x * blockDim.x;
@@ -141,12 +142,13 @@ __global__ void __pre_scan(
 
 //USED FOR lrg_scan
 template<typename data_t, typename index_t>
-__global__ void __spine_scan(
-	data_t *blk_sum,
-	data_t *grd_sum,
-	index_t num_dat,
-	const index_t THD_NUM
-) {
+__global__ void __spine_scan
+	(
+		data_t *blk_sum,
+		data_t *grd_sum,
+		index_t num_dat,
+		const index_t THD_NUM
+		) {
 	extern __shared__ data_t
 	s_mem[];
 
@@ -814,47 +816,53 @@ __global__ void sml_scan(
 		scan_out_d[lane + 1] = s_mem[lane + 1 + off_b];
 }
 
+
+//DONE
 //-----------------------------------------
 //For inspection,
 //exact threads number of data to scan
 //---------------------------------------
 template<typename data_t, typename index_t>
-__host__ void insp_scan(
-	data_t *scan_in_d,
-	//TODO requires scan_in_d to be
-	//		exact times of
-	//		THD_NUM*2
-	data_t *scan_out_d,
-	const index_t num_dat,
-	const index_t BLK_NUM,
-	const index_t THD_NUM,
-	const ex_q_t q_t,
-	cudaStream_t &stream
-) {
+void insp_scan
+	(
+		data_t *scan_in_d,
+		//TODO requires scan_in_d to be
+		//		exact times of
+		//		THD_NUM*2
+		data_t *scan_out_d,
+		const index_t num_dat,
+		const index_t BLK_NUM,
+		const index_t THD_NUM,
+		const ex_q_t q_t,
+//		cudaStream_t &stream
+		) {
 	data_t *blk_sum;
 	const size_t sz = sizeof(data_t);
 	const index_t num_blk = THD_NUM << 1;
 	const index_t padding = CONFLICT_FREE_OFFSET((THD_NUM << 1) - 1);
 //	std::cout<<"padding = "<<padding<<"\n";
-	cudaMalloc((void **) &blk_sum, sz * num_blk);
+	DONE;
+//	cudaMalloc((void **) &blk_sum, sz * num_blk);
+	blk_sum = (data_t *)malloc(sz * num_blk);
 
+	//TODO do prefix sum here??
 	__insp_pre_scan<data_t, index_t><<< BLK_NUM, THD_NUM, (padding + (THD_NUM << 1)) * sz, stream >>>
 		(
 			scan_in_d,
-				scan_out_d,
-				blk_sum,
-				num_dat,
-				THD_NUM
-		);
+			scan_out_d,
+			blk_sum,
+			num_dat,
+			THD_NUM
+			);
 
-	cudaThreadSynchronize();
+//	cudaThreadSynchronize();
 	__insp_post_scan<data_t, index_t><<< BLK_NUM, THD_NUM, (padding + (THD_NUM << 1)) * sz, stream >>>
 		(
 			scan_out_d,
-				blk_sum,
-				num_dat,
-				num_blk,
-				THD_NUM,
-				q_t
-		);
+			blk_sum,
+			num_dat,
+			num_blk,
+			THD_NUM,
+			q_t
+			);
 }

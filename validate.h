@@ -29,14 +29,14 @@
  */
 #include "comm.h"
 
-template<typename index_t,
-	typename vertex_t,
-	typename depth_t>
-index_t validate(
-	depth_t *depth_h,
-	index_t *beg_pos,
-	vertex_t *csr,
-	index_t num_ver) {
+template<typename index_t, typename vertex_t, typename depth_t>
+index_t validate
+	(
+		depth_t *depth_h,
+		index_t *beg_pos,
+		vertex_t *csr,
+		index_t num_ver
+		) {
 
 	//divide the adjacency vertices of this vertex into two parts
 	//-parent part: all the vertices connected to the parent part
@@ -93,15 +93,15 @@ index_t validate(
 }
 
 
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
-void report(
-	index_t &agg_tr_edges,
-	index_t &agg_tr_v,
-	index_t *beg_pos,
-	depth_t *depth_h,
-	index_t num_ver) {
+template<typename vertex_t, typename index_t, typename depth_t>
+void report
+	(
+		index_t &agg_tr_edges,
+		index_t &agg_tr_v,
+		index_t *beg_pos,
+		depth_t *depth_h,
+		index_t num_ver
+		) {
 	agg_tr_edges = 0;
 	agg_tr_v = 0;
 	for (index_t i = 0; i < num_ver; i++) {
@@ -110,6 +110,5 @@ void report(
 			agg_tr_edges += beg_pos[i + 1] - beg_pos[i];
 		}
 	}
-
-
+	
 }

@@ -48,15 +48,14 @@ __device__ void __sync_warp(int predicate) {
 	}
 }
 
+//DONE
 //This kernel is executed by one thread
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
-__global__ void init_expand_sort
+template<typename vertex_t, typename index_t, typename depth_t>
+void init_expand_sort
 	(
 		vertex_t src_v,
 		depth_t *depth_d
-	) {
+		) {
 	depth_d[src_v] = 0;
 	in_q_sz_d = 1;
 	error_d = 0;
@@ -67,15 +66,13 @@ __global__ void init_expand_sort
 //+---------------------------
 //|for ex_q_sml_d expansion
 //+---------------------------
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
+template<typename vertex_t, typename index_t, typename depth_t>
 __global__ void THD_expand_sort
 	(
 		depth_t *depth_d,
 		index_t curr_level,
 		const vertex_t *__restrict__ adj_list_d
-	) {
+		) {
 	const index_t q_sz = ex_sml_sz_d;
 	const depth_t LEVEL = curr_level;
 
@@ -88,10 +85,8 @@ __global__ void THD_expand_sort
 	index_t strt_pos_curr, strt_pos_next;
 	vertex_t aq_ver_curr, aq_ver_next;
 	depth_t adj_depth_curr, adj_depth_next;
-	__shared__
-	index_t hub_cache[HUB_SZ];
-	__shared__
-	depth_t hub_depth[HUB_SZ];
+	__shared__ index_t hub_cache[HUB_SZ];
+	__shared__ depth_t hub_depth[HUB_SZ];
 
 	index_t cache_ptr = threadIdx.x;
 
@@ -175,15 +170,13 @@ __global__ void THD_expand_sort
 //+------------------------------
 //|ex_q_mid_d expansion
 //+------------------------------
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
+template<typename vertex_t, typename index_t, typename depth_t>
 __global__ void WAP_expand_sort
 	(
 		depth_t *depth_d,
 		index_t curr_level,
 		const vertex_t *__restrict__ adj_list_d
-	) {
+		) {
 	const index_t q_sz = ex_mid_sz_d;
 	const depth_t LEVEL = curr_level;
 
@@ -283,15 +276,13 @@ __global__ void WAP_expand_sort
 	}
 }
 
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
+template<typename vertex_t, typename index_t, typename depth_t>
 __global__ void CTA_expand_sort
 	(
 		depth_t *depth_d,
 		index_t curr_level,
 		const vertex_t *__restrict__ adj_list_d
-	) {
+		) {
 	const index_t q_sz = ex_lrg_sz_d;
 	index_t vec_id = blockIdx.x;
 	const depth_t LEVEL = curr_level;
@@ -396,15 +387,13 @@ __global__ void CTA_expand_sort
 //+---------------------------
 //|for ex_q_sml_d expansion
 //+---------------------------
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
+template<typename vertex_t, typename index_t, typename depth_t>
 __global__ void THD_bu_expand_sort
 	(
 		depth_t *depth_d,
 		index_t curr_level,
 		const vertex_t *__restrict__ adj_list_d
-	) {
+		) {
 	const index_t q_sz = ex_sml_sz_d;
 
 	const index_t GRNLTY = blockDim.x * gridDim.x;
@@ -493,9 +482,7 @@ __global__ void THD_bu_expand_sort
 //+------------------------------
 //|ex_q_mid_d expansion
 //+------------------------------
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
+template<typename vertex_t, typename index_t, typename depth_t>
 __global__ void WAP_bu_expand_sort
 	(
 		depth_t *depth_d,
@@ -630,15 +617,13 @@ __global__ void WAP_bu_expand_sort
 	}
 }
 
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
+template<typename vertex_t, typename index_t, typename depth_t>
 __global__ void CTA_bu_expand_sort
 	(
 		depth_t *depth_d,
 		index_t curr_level,
 		const vertex_t *__restrict__ adj_list_d
-	) {
+		) {
 	const index_t q_sz = ex_lrg_sz_d;
 
 	index_t vec_id = blockIdx.x;
@@ -775,16 +760,14 @@ __global__ void CTA_bu_expand_sort
 //+----------------------
 //|CLFY_EXPAND_SORT
 //+----------------------
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
+template<typename vertex_t, typename index_t, typename depth_t>
 void clfy_expand_sort
 	(
 		depth_t *depth_d,
 		index_t curr_level,
 		const vertex_t *adj_list_d,
 		cudaStream_t *stream
-	) {
+		) {
 	THD_expand_sort<vertex_t, index_t, depth_t>
 		<<<BLKS_NUM, THDS_NUM, 0, stream[0]>>>
 		(
@@ -817,16 +800,14 @@ void clfy_expand_sort
 //+----------------------
 //|CLFY_EXPAND_SORT
 //+----------------------
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
+template<typename vertex_t, typename index_t, typename depth_t>
 void clfy_bu_expand_sort
 	(
 		depth_t *depth_d,
 		index_t curr_level,
 		const vertex_t *adj_list_d,
 		cudaStream_t *stream
-	) {
+		) {
 	THD_bu_expand_sort<vertex_t, index_t, depth_t><<<BLKS_NUM, THDS_NUM, 0, stream[0] >>>
 		(
 			depth_d,

@@ -33,9 +33,9 @@
 //+---------------------------------
 //|For clfy BASED EX_QUEUE STORAGE
 //+---------------------------------
-template<typename vertex_t, typename index_t,
-	typename depth_t>
-__global__ void sort_dist_inspect_clfy(
+template<typename vertex_t, typename index_t, typename depth_t>
+__global__ void sort_dist_inspect_clfy
+	(
 		vertex_t *ex_cat_sml_q,
 		vertex_t *ex_cat_mid_q,
 		vertex_t *ex_cat_lrg_q,
@@ -49,7 +49,7 @@ __global__ void sort_dist_inspect_clfy(
 		const index_t sml_shed,
 		const index_t lrg_shed,
 		const index_t bin_sz
-	) {
+		) {
 	const index_t TID_ST = threadIdx.x + blockIdx.x * blockDim.x;
 	const index_t NUM_VER = num_ver;
 	const index_t GRNTY = blockDim.x * gridDim.x;
@@ -85,8 +85,9 @@ __global__ void sort_dist_inspect_clfy(
 			//---------------
 			//!!!HERE IS A FILTER OF CARD =0
 			//------------------------------
-			if (card_curr <= 0) {}
-			else if (card_curr < sml_shed) {
+			if (card_curr <= 0) {
+				;
+			} else if (card_curr < sml_shed) {
 				ex_cat_sml_q[EX_OFF + ex_sml_ct] = tid;
 				ex_sml_ct++;
 			} else if (card_curr > lrg_shed) {
@@ -300,29 +301,38 @@ __global__ void sort_switch_dist_inspect_clfy
 	ex_cat_lrg_sz[TID_ST] = ex_lrg_ct;
 }
 
+//DONE
 //+----------------------------
 //|For xxx_inspect_clfy
 //+----------------------------
 template<typename vertex_t, typename index_t>
-__global__ void reaper
+void reaper
 	(
 		vertex_t *ex_cat_q,//sml, mid, lrg
 		vertex_t *ex_q_d,//sml, mid, lrg
 		index_t *ex_q_sz_d,
 		index_t *ex_cat_off,
 		const index_t bin_sz
-	) {
-	const index_t TID = threadIdx.x + blockIdx.x * blockDim.x;
-	const index_t SCAN_OFF = ex_cat_off[TID];
-	const index_t COUNT = ex_q_sz_d[TID];
-	const index_t BIN_OFF = TID * bin_sz;
+		) {
 
-	for (index_t i = 0; i < COUNT; i++)
-		ex_q_d[SCAN_OFF + i] = ex_cat_q[BIN_OFF + i];
+//	const index_t TID = threadIdx.x + blockIdx.x * blockDim.x;
+//	const index_t SCAN_OFF = ex_cat_off[TID];
+//	const index_t COUNT = ex_q_sz_d[TID];
+//	const index_t BIN_OFF = TID * bin_sz;
+
+//	for (index_t i = 0; i < COUNT; i++)
+//		ex_q_d[SCAN_OFF + i] = ex_cat_q[BIN_OFF + i];
+	for (int TID = 0; TID < BLKS_NUM * THDS_NUM; TID++) {
+		index_t SCAN_OFF = ex_cat_off[TID];
+		index_t COUNT = ex_q_sz_d[TID];
+		index_t BIN_OFF = TID * bin_sz;
+		for (index_t i = 0; i < COUNT; i++)
+			ex_q_d[SCAN_OFF + i] = ex_cat_q[BIN_OFF + i];
+	}
 }
 
-template<typename vertex_t, typename index_t,
-	typename depth_t>
+//DONE
+template<typename vertex_t, typename index_t, typename depth_t>
 __global__ void sort_bu_dist_inspect_clfy
 	(
 		vertex_t *ex_cat_sml_q,//each thd obt ex_q
@@ -337,85 +347,93 @@ __global__ void sort_bu_dist_inspect_clfy
 		const index_t sml_shed,
 		const index_t lrg_shed,
 		const index_t bin_sz
-	) {
-	const index_t TID_ST = threadIdx.x + blockIdx.x * blockDim.x;
-	const index_t NUM_VER = num_ver;
-	const index_t GRNTY = blockDim.x * gridDim.x;
-	const index_t EX_OFF = TID_ST * bin_sz;
-	index_t tid_next = TID_ST;
-	index_t tid = TID_ST;
-	const depth_t LEVEL = curr_level;
+		) {
+	for (int TID_ST = 0; TID_ST < BLKS_NUM * THDS_NUM; TID_ST++) {
+		index_t NUM_VER = num_ver;
+		index_t GRNTY = BLKS_NUM * THDS_NUM;
+		index_t EX_OFF = TID_ST * bin_sz;
+		index_t tid_next = TID_ST;
+		index_t tid = TID_ST;
+		depth_t LEVEL = curr_level;
 
-	index_t card_curr, card_next;
-	depth_t depth_curr, depth_next;
+		index_t card_curr, card_next;
+		depth_t depth_curr, depth_next;
 
-	index_t ex_sml_ct = 0;
-	index_t ex_mid_ct = 0;
-	index_t ex_lrg_ct = 0;
-	index_t hub_ptr;
+		index_t ex_sml_ct = 0;
+		index_t ex_mid_ct = 0;
+		index_t ex_lrg_ct = 0;
+		index_t hub_ptr;
 
-	while (tid < HUB_BU_SZ) {
-		hub_vert[tid] = V_INI_HUB;
-		hub_card[tid] = 0;
+		while (tid < HUB_BU_SZ) {
+			hub_vert[tid] = V_INI_HUB;
+			hub_card[tid] = 0;
 
-		tid += GRNTY;
-	}
-	tid = TID_ST;
+			tid += GRNTY;
+		}
+		tid = TID_ST;
 
-	if (tid < NUM_VER) {
-		card_curr = tex1Dfetch(tex_card, tid);
-		depth_curr = tex1Dfetch(tex_depth, tid);
-		tid_next += GRNTY;
-	}
-
-	while (tid < NUM_VER) {
-		if (tid_next < NUM_VER) {
-			card_next = tex1Dfetch(tex_card, tid_next);
-			depth_next = tex1Dfetch(tex_depth, tid_next);
+		if (tid < NUM_VER) {
+			DONE;
+//			card_curr = tex1Dfetch(tex_card, tid);
+//			depth_curr = tex1Dfetch(tex_depth, tid);
+			card_curr = *(tex_card + tid);
+			depth_curr = *(tex_depth + tid);
+			tid_next += GRNTY;
 		}
 
-		if (depth_curr == INFTY) {
-			//+---------------
-			//|!!!HERE IS A FILTER OF CARD =0
-			//+------------------------------
-			if (card_curr <= 0) {}
-			else if (card_curr < sml_shed) {
-				ex_cat_sml_q[EX_OFF + ex_sml_ct] = tid;
-				ex_sml_ct++;
-			} else if (card_curr > lrg_shed) {
-				ex_cat_lrg_q[EX_OFF + ex_lrg_ct] = tid;
-				ex_lrg_ct++;
-			} else {
-				ex_cat_mid_q[EX_OFF + ex_mid_ct] = tid;
-				ex_mid_ct++;
+		while (tid < NUM_VER) {
+			if (tid_next < NUM_VER) {
+				DONE;
+//				card_next = tex1Dfetch(tex_card, tid_next);
+//				depth_next = tex1Dfetch(tex_depth, tid_next);
+				card_next = *(tex_card + tid_next);
+				depth_next = *(tex_depth + tid_next);
 			}
-		}
 
-		//construct hub-cache
-		if (depth_curr == LEVEL) {
-			hub_ptr = tid & (HUB_BU_SZ - 1);
-			if (card_curr > hub_card[hub_ptr]) {
-				hub_vert[hub_ptr] = tid;
-				hub_card[hub_ptr] = card_curr;
+			if (depth_curr == INFTY) {
+				//+---------------
+				//|!!!HERE IS A FILTER OF CARD =0
+				//+------------------------------
+				if (card_curr <= 0) {
+					;
+				} else if (card_curr < sml_shed) {
+					ex_cat_sml_q[EX_OFF + ex_sml_ct] = tid;
+					ex_sml_ct++;
+				} else if (card_curr > lrg_shed) {
+					ex_cat_lrg_q[EX_OFF + ex_lrg_ct] = tid;
+					ex_lrg_ct++;
+				} else {
+					ex_cat_mid_q[EX_OFF + ex_mid_ct] = tid;
+					ex_mid_ct++;
+				}
 			}
+
+			//construct hub-cache
+			if (depth_curr == LEVEL) {
+				hub_ptr = tid & (HUB_BU_SZ - 1);
+				if (card_curr > hub_card[hub_ptr]) {
+					hub_vert[hub_ptr] = tid;
+					hub_card[hub_ptr] = card_curr;
+				}
+			}
+
+			depth_curr = depth_next;
+			card_curr = card_next;
+			tid = tid_next;
+			tid_next += GRNTY;
 		}
-
-		depth_curr = depth_next;
-		card_curr = card_next;
-		tid = tid_next;
-		tid_next += GRNTY;
-	}
-
+		
 #ifdef ENABLE_CHECKING
-	if(	ex_sml_ct > bin_sz ||
-		ex_mid_ct > bin_sz ||
-		ex_lrg_ct > bin_sz)
-		error_d = 1;
+		if (ex_sml_ct > bin_sz ||
+		    ex_mid_ct > bin_sz ||
+		    ex_lrg_ct > bin_sz)
+			error_d = 1;
 #endif
 
-	ex_cat_sml_sz[TID_ST] = ex_sml_ct;
-	ex_cat_mid_sz[TID_ST] = ex_mid_ct;
-	ex_cat_lrg_sz[TID_ST] = ex_lrg_ct;
+		ex_cat_sml_sz[TID_ST] = ex_sml_ct;
+		ex_cat_mid_sz[TID_ST] = ex_mid_ct;
+		ex_cat_lrg_sz[TID_ST] = ex_lrg_ct;
+	}
 }
 
 
@@ -582,9 +600,8 @@ void sort_inspect_clfy
 
 }
 
-template<typename vertex_t,
-	typename index_t,
-	typename depth_t>
+//DONE
+template<typename vertex_t, typename index_t, typename depth_t>
 void sort_bu_inspect_clfy
 	(
 		vertex_t *ex_cat_sml_q,//each thd obt ex_q
@@ -602,29 +619,32 @@ void sort_bu_inspect_clfy
 		depth_t *depth_d,
 		depth_t curr_level,
 		index_t num_ver,//num ver in the graph
-		cudaStream_t *stream,
+//		cudaStream_t *stream,
 		const index_t sml_shed,
 		const index_t lrg_shed,
 		const index_t bin_sz
 	) {
 //	std::cout<<"Before catgorizer: "<<cudaDeviceSynchronize()<<"\n";
-	sort_bu_dist_inspect_clfy<vertex_t, index_t, depth_t><<<BLKS_NUM, THDS_NUM>>>
+
+	//DONE
+	sort_bu_dist_inspect_clfy<vertex_t, index_t, depth_t>
 		(
 			ex_cat_sml_q,//each thd obt ex_q
-				ex_cat_mid_q,//each thd obt ex_q
-				ex_cat_lrg_q,//each thd obt ex_q
-				ex_cat_sml_sz,
-				ex_cat_mid_sz,
-				ex_cat_lrg_sz,
-				depth_d,
-				curr_level,
-				num_ver,
-				sml_shed,
-				lrg_shed,
-				bin_sz
-		);
-	cudaThreadSynchronize();
+			ex_cat_mid_q,//each thd obt ex_q
+			ex_cat_lrg_q,//each thd obt ex_q
+			ex_cat_sml_sz,
+			ex_cat_mid_sz,
+			ex_cat_lrg_sz,
+			depth_d,
+			curr_level,
+			num_ver,
+			sml_shed,
+			lrg_shed,
+			bin_sz
+			);
+//	cudaThreadSynchronize();
 
+	//STEAM 0
 	//+------------------
 	//|SML_Q
 	//+------------------
@@ -636,19 +656,19 @@ void sort_bu_inspect_clfy
 			BLKS_NUM >> 1,
 			THDS_NUM >> 1,
 			SML_Q,
-			stream[0]
-		);
+//			stream[0]
+			);
 //	std::cout<<"After scan: "<<cudaDeviceSynchronize()<<"\n";
-
-	reaper<vertex_t, index_t><<<BLKS_NUM, THDS_NUM, 0, stream[0]>>>
+	reaper<vertex_t, index_t>
 		(
 			ex_cat_sml_q,
-				ex_q_sml_d,
-				ex_cat_sml_sz,
-				ex_cat_sml_off,
-				bin_sz
-		);
+			ex_q_sml_d,
+			ex_cat_sml_sz,
+			ex_cat_sml_off,
+			bin_sz
+			);
 
+	//STEAM 1
 	//+------------------
 	//|MID_Q
 	//+------------------
@@ -660,17 +680,18 @@ void sort_bu_inspect_clfy
 			BLKS_NUM >> 1,
 			THDS_NUM >> 1,
 			MID_Q,
-			stream[1]
-		);
-	reaper<vertex_t, index_t><<<BLKS_NUM, THDS_NUM, 0, stream[1]>>>
+//			stream[1]
+			);
+	reaper<vertex_t, index_t>
 		(
 			ex_cat_mid_q,
-				ex_q_mid_d,
-				ex_cat_mid_sz,
-				ex_cat_mid_off,
-				bin_sz
-		);
+			ex_q_mid_d,
+			ex_cat_mid_sz,
+			ex_cat_mid_off,
+			bin_sz
+			);
 
+	//STEAM 2
 	//+------------------
 	//|LRG_Q
 	//+------------------
@@ -682,14 +703,14 @@ void sort_bu_inspect_clfy
 			BLKS_NUM >> 1,
 			THDS_NUM >> 1,
 			LRG_Q,
-			stream[2]
-		);
-	reaper<vertex_t, index_t><<<BLKS_NUM, THDS_NUM, 0, stream[2]>>>
+//			stream[2]
+			);
+	reaper<vertex_t, index_t>
 		(
 			ex_cat_lrg_q,
-				ex_q_lrg_d,
-				ex_cat_lrg_sz,
-				ex_cat_lrg_off,
-				bin_sz
-		);
+			ex_q_lrg_d,
+			ex_cat_lrg_sz,
+			ex_cat_lrg_off,
+			bin_sz
+			);
 }

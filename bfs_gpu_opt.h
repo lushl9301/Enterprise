@@ -67,8 +67,9 @@ void bfs_tdbu_clfy_sort
 	,index_t	*adj_card_d
 #endif
 	) {
+	//DONE
 	//TODO change to serial
-	init_expand_sort<vertex_t, index_t, depth_t> <<<1, 1, 0, stream[0]>>>
+	init_expand_sort<vertex_t, index_t, depth_t>
 		(
 			src_v,
 			depth_d
@@ -146,8 +147,7 @@ void bfs_tdbu_clfy_sort
 			std::cout<<"IN-top-down\n";
 			tm_insp_strt=wtime();
 #endif
-			sort_inspect_clfy
-				<vertex_t, index_t, depth_t>
+			sort_inspect_clfy<vertex_t, index_t, depth_t>
 				(
 					ex_cat_sml_d,//each thd obt ex_q
 					ex_cat_mid_d,//each thd obt ex_q
@@ -224,7 +224,7 @@ void bfs_tdbu_clfy_sort
 		for(index_t i = 0; i < ex_mid_sz; i++)
 			expanded_count += d_card[d_ex_queue[i]];
 		DONE;
-		cudaMemcpy(d_ex_queue, ex_q_lrg_d, sizeof(vertex_t)*ex_lrg_sz, cudaMemcpyDeviceToHost);
+//		cudaMemcpy(d_ex_queue, ex_q_lrg_d, sizeof(vertex_t)*ex_lrg_sz, cudaMemcpyDeviceToHost);
 		memcpy(d_ex_queue, ex_q_lrg_d, sizeof(vertex_t)*ex_lrg_sz);
 		for(index_t i = 0; i < ex_lrg_sz; i++)
 			expanded_count += d_card[d_ex_queue[i]];

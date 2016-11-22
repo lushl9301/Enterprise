@@ -31,8 +31,7 @@
 
 template<typename file_vert_t, typename file_index_t, typename file_weight_t,
 	 typename new_vert_t, typename new_index_t, typename new_weight_t>
-graph<file_vert_t, file_index_t, file_weight_t, new_vert_t, new_index_t, new_weight_t>
-::graph
+graph<file_vert_t, file_index_t, file_weight_t, new_vert_t, new_index_t, new_weight_t>::graph
 (
 	const char *beg_file,
 	const char *csr_file,
@@ -61,8 +60,11 @@ graph<file_vert_t, file_index_t, file_weight_t, new_vert_t, new_index_t, new_wei
 			for (new_index_t i = 0; i < vert_count + 1; ++i)
 				beg_pos[i] = (new_index_t) tmp_beg_pos[i];
 			delete[] tmp_beg_pos;
-		} else { beg_pos = (new_index_t *) tmp_beg_pos; }
-	} else std::cout << "beg file cannot open\n";
+		} else {
+			beg_pos = (new_index_t *) tmp_beg_pos;
+		}
+	} else
+		std::cout << "beg file cannot open\n";
 
 	file = fopen(csr_file, "rb");
 	if (file != NULL) {
@@ -80,9 +82,10 @@ graph<file_vert_t, file_index_t, file_weight_t, new_vert_t, new_index_t, new_wei
 			for (new_index_t i = 0; i < edge_count; ++i)
 				csr[i] = (new_vert_t) tmp_csr[i];
 			delete[] tmp_csr;
-		} else csr = (new_vert_t *) tmp_csr;
-
-	} else std::cout << "CSR file cannot open\n";
+		} else
+			csr = (new_vert_t *) tmp_csr;
+	} else
+		std::cout << "CSR file cannot open\n";
 
 
 	file = fopen(weight_file, "rb");
@@ -101,9 +104,13 @@ graph<file_vert_t, file_index_t, file_weight_t, new_vert_t, new_index_t, new_wei
 			for (new_index_t i = 0; i < edge_count; ++i)
 				weight[i] = (new_weight_t) tmp_weight[i];
 			delete[] tmp_weight;
-		} else weight = (new_weight_t *) tmp_weight;
-	} else std::cout << "Weight file cannot open\n";
+		} else
+			weight = (new_weight_t *) tmp_weight;
+	} else
+		std::cout << "Weight file cannot open\n";
 
-	std::cout << "Graph load (success): " << vert_count << " verts, " << edge_count << " edges " << wtime() - tm
-	          << " second(s)\n";
+	std::cout << "Graph load (success): "
+		  << vert_count << " verts, "
+		  << edge_count << " edges "
+		  << wtime() - tm << " second(s)\n";
 }

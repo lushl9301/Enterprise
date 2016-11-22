@@ -811,24 +811,24 @@ void clfy_bu_expand_sort
 	THD_bu_expand_sort<vertex_t, index_t, depth_t><<<BLKS_NUM, THDS_NUM, 0, stream[0] >>>
 		(
 			depth_d,
-				curr_level,
-				adj_list_d
+			curr_level,
+			adj_list_d
 		);
 	//std::cout<<"bu THD ="<<cudaDeviceSynchronize()<<"\n";
 
 	WAP_bu_expand_sort<vertex_t, index_t, depth_t><<<BLKS_NUM, THDS_NUM, 0, stream[1]>>>
 		(
 			depth_d,
-				curr_level,
-				adj_list_d
+			curr_level,
+			adj_list_d
 		);
 	//std::cout<<"bu WAP ="<<cudaDeviceSynchronize()<<"\n";
 
 	CTA_bu_expand_sort<vertex_t, index_t, depth_t><<<BLKS_NUM, THDS_NUM, 0, stream[2]>>>
 		(
 			depth_d,
-				curr_level,
-				adj_list_d
+			curr_level,
+			adj_list_d
 		);
 	//std::cout<<"bu CTA ="<<cudaDeviceSynchronize()<<"\n";
 }
